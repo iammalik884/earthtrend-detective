@@ -126,3 +126,4 @@ footer { color: var(--muted); font-size: 12px; text-align: center; padding: 24px
   main { padding: 16px; }
   .scroll-x { overflow-x: auto; }
 }
+.cases .card + .card { margin-top: 0; }
