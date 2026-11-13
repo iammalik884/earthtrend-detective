@@ -29,8 +29,18 @@
   document.querySelectorAll('[data-goto]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.goto); }));
 
   // ---------- location ----------
+  // Basemap with automatic fallback (CARTO dark -> Esri dark gray) if tiles fail to load
+  function addBasemap(m) {
+    let layer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap contributors &copy; CARTO', maxZoom: 12, subdomains: 'abcd' }).addTo(m);
+    let errors = 0, switched = false;
+    layer.on('tileerror', () => {
+      if (switched || ++errors < 4) return;
+      switched = true; m.removeLayer(layer);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxZoom: 16 }).addTo(m);
+    });
+  }
   const map = L.map('map', { worldCopyJump: true }).setView([state.lat, state.lon], 4);
-  L.tileLayer('https://{s}.basemap.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 12 }).addTo(map);
+  addBasemap(map);
   const marker = L.marker([state.lat, state.lon]).addTo(map);
 
   function setLocation(lat, lon, place, zoom) {
@@ -336,7 +346,7 @@
 
   // ---------- trend map ----------
   const tmap = L.map('trendmap', { worldCopyJump: true }).setView([state.lat, state.lon], 5);
-  L.tileLayer('https://{s}.basemap.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 10 }).addTo(tmap);
+  addBasemap(tmap);
   let gridLayer = L.layerGroup().addTo(tmap);
   const WET = new Set(['PRECTOTCORR', 'RH2M', 'QV2M', 'T2MDEW', 'GWETTOP', 'GWETROOT', 'GWETPROF', 'EVPTRNS', 'CLOUD_AMT']);
   function divColor(t, wet) {
