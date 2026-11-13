@@ -385,7 +385,8 @@
         ▼ Significant decrease: <b>${decN}</b> of ${n} cells (${fmt(100 * decN / n, 0)}%)<br>
         After false-discovery-rate correction: ▲ ${incF} · ▼ ${decF} (outlined cells)<br>
         Trend range: ${fmt(Math.min(...decs))} to ${fmt(Math.max(...decs))} ${v.units}/decade
-        ${inc > 0 && decN > 0 ? '<br><br>↕️ <b>Opposite trends found!</b> The same variable is significantly rising in some cells and falling in others within this region.' : ''}</div>`;
+        ${incF > 0 && decF > 0 ? '<br><br>↕️ <b>Opposite trends found!</b> Even after false-discovery-rate correction, the same variable is significantly rising in some cells and falling in others within this region.'
+          : (inc > 0 && decN > 0 ? '<br><br>↕️ <b>Possible opposite trends:</b> some cells rise and others fall at p &lt; 0.05, but the opposite-sign cells do not survive false-discovery-rate correction, so treat them with caution.' : '')}</div>`;
       $('mapLegend').innerHTML = `<span>▼ ${fmt(-scale)}</span><div class="bar" style="background:linear-gradient(90deg, ${divColor(-1, wet)}, ${divColor(0, wet)}, ${divColor(1, wet)})"></div><span>▲ ${fmt(scale)} ${v.units}/decade</span>
         <span>· Bright = significant (p&lt;0.05) · Faded = not significant · Black outline = significant after FDR</span>`;
       setStatus('mapStatus', '✅ Click any cell for details.');

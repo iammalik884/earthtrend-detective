@@ -46,8 +46,8 @@
       place: 'Aral Sea region, Kazakhstan/Uzbekistan', lat: 45.0, lon: 60.0, variable: 'GWETTOP', period: 'annual', type: 'desert',
       story: 'Once the world’s fourth-largest lake, the Aral Sea shrank after its rivers were diverted. Explore surface soil wetness, then try temperature.' },
     { emoji: '↕️', title: 'Same Variable, Opposite Signs', q: 'Can rainfall rise in one place and fall nearby?',
-      place: 'Sargodha, Pakistan', lat: 32.08, lon: 72.67, variable: 'PRECTOTCORR', period: 'annual', type: 'farmland', map: 10,
-      story: 'Opens the Trend Map over a 10° × 10° region of Pakistan and north-west India. Look for cells where rainfall increases and others where it decreases, even though the same monsoon system drives both.' },
+      place: 'Central Kenya (East Africa)', lat: 0.0, lon: 37.0, variable: 'PRECTOTCORR', period: 'annual', type: 'farmland', map: 10,
+      story: 'Opens the Trend Map over a 10° × 10° region of East Africa (Kenya, Uganda, Tanzania, Ethiopia, Somalia). The same rain-bearing systems drive the whole region, yet some grid cells show significant wetting and others significant drying, even after false-discovery-rate correction.' },
     { emoji: '🏙️', title: 'Urban Heat in Lahore', q: 'Is Lahore heating up more at night than during the day?',
       place: 'Lahore, Pakistan', lat: 31.55, lon: 74.34, variable: 'T2M_MIN', period: 'annual', type: 'city',
       story: 'Run the Variable Scanner afterwards to see every variable that is trending in Lahore — with false-discovery-rate protection.' }
