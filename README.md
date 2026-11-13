@@ -72,6 +72,7 @@ tests/ui_test.js    End-to-end UI test with mocked NASA APIs (Playwright)
 * **NASA POWER** Project (NASA Langley Research Center), https://power.larc.nasa.gov — monthly point and regional API.
   Meteorology and soil moisture from **MERRA-2** (Gelaro et al., 2017, NASA GMAO); radiation from **GEWEX SRB** and **CERES** (NASA).
 * **MODIS/Terra Vegetation Indices 16-Day L3 Global 250 m (MOD13Q1 v6.1)**, Didan (2021), NASA EOSDIS LP DAAC; accessed through the **ORNL DAAC MODIS Web Service**.
+* MODIS NDVI for the two farmland demo locations is stored in `data/ndvi_snapshots.json` (downloaded from the ORNL DAAC service with this app's own code) so the Case File opens instantly; every other location is fetched live, which can take a few minutes because the service returns 10 composites per request.
 * Map tiles © Esri (World Dark Gray Canvas) with data © OpenStreetMap contributors.
 
 NASA does not endorse this project. This is not an official NASA product.
