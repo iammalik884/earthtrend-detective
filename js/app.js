@@ -330,7 +330,7 @@
             <td><b>${it.v.name}</b><br><span class="muted">${it.v.units} · ${it.r.span[0]}–${it.r.span[1]}</span></td>
             <td>${sparkline(it.r.y)}</td>
             <td class="${dec > 0 ? 'up' : 'down'}">${dec > 0 ? '+' : ''}${fmt(dec)}</td>
-            <td>${it.r.pctChange !== null ? (it.r.pctChange > 0 ? '+' : '') + fmt(it.r.pctChange, 1) + '%' : fmt(it.r.totalChange)}</td>
+            <td>${it.r.pctChange !== null ? (it.r.pctChange > 0 ? '+' : '') + fmt(it.r.pctChange, 1) + '%' : (it.r.totalChange > 0 ? '+' : '') + fmt(it.r.totalChange) + ' ' + it.v.units}</td>
             <td>${fmtP(it.r.primaryP)}</td><td>${fmtP(it.q)}</td>
             <td><span class="pill ${st.key}">${st.key === 'none' ? 'no clear trend' : (dec > 0 ? '▲ ' : '▼ ') + st.label.toLowerCase()}</span></td></tr>`;
         }).join('');
