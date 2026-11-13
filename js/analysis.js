@@ -6,7 +6,8 @@
   function fmt(v, d = 2) {
     if (v === null || v === undefined || !isFinite(v)) return '–';
     const a = Math.abs(v);
-    if (a !== 0 && (a < 0.001 || a >= 1e5)) return v.toExponential(2);
+    if (a >= 1e5) return v.toExponential(2);
+    if (a !== 0 && a < 0.01) return (+v.toPrecision(2)).toString();
     if (a < 0.1) d = Math.max(d, 3);
     return v.toFixed(d);
   }
