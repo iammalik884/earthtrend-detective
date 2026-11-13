@@ -132,7 +132,7 @@
     if (state.endYear - state.startYear < 9) { setStatus('status', 'Please choose at least 10 years — trends need a long record.', true); return; }
     const v = byId[state.varId];
     $('runBtn').disabled = true;
-    setStatus('status', v.provider === 'modis' ? '🛰️ Downloading MODIS greenness from NASA (about 600 satellite composites)…' : '🛰️ Downloading data from NASA POWER…');
+    setStatus('status', v.provider === 'modis' ? '🛰️ Downloading MODIS greenness from NASA (about 600 satellite composites, 10 per request). A new location can take 3–6 minutes — please keep this tab open.' : '🛰️ Downloading data from NASA POWER…');
     setProgress('prog', 0.15);
     try {
       const { series: full, meta } = await getSeries(state.varId, state.lat, state.lon, 'prog');
@@ -230,7 +230,7 @@
     if (r.pettitt) rows.push(['Pettitt change point', `K = ${r.pettitt.K}, most likely after ${r.pettittYears[r.pettitt.index]}`, `${pText(r.pettitt.p)}`, 'Tests for a sudden step change.']);
     if (r.mode === 'yearly' && r.yearsNeeded && r.primaryP >= r.alpha && r.yearsNeeded > r.nYears) rows.push(['Years needed for significance', isFinite(r.yearsNeeded) ? `≈ ${r.yearsNeeded} years` : '> 300 years', `have ${r.nYears}`, 'If current rate and noise persist (OLS-based estimate).']);
     $('statsTable').innerHTML = '<tr><th>Test</th><th>Result</th><th>Significance</th><th>What it means</th></tr>' + rows.map(rw => `<tr>${rw.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
-    $('dataNote').innerHTML = `Data: ${v.source}. Location ${state.last.lat.toFixed(2)}°, ${state.last.lon.toFixed(2)}°${meta && meta.elevation ? `, grid elevation ${Math.round(meta.elevation)} m` : ''}. ★ = test used for the verdict. Significance level α = 0.05.`;
+    $('dataNote').innerHTML = `Data: ${v.source}${meta && meta.snapshot ? ` (pre-downloaded from the ORNL DAAC MODIS web service on ${meta.snapshot} for this demo location)` : ''}. Location ${state.last.lat.toFixed(2)}°, ${state.last.lon.toFixed(2)}°${meta && meta.elevation ? `, grid elevation ${Math.round(meta.elevation)} m` : ''}. ★ = test used for the verdict. Significance level α = 0.05.`;
   }
 
   function toCSV() {

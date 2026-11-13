@@ -4,12 +4,14 @@
 
   const PLACES = [
     { name: 'Sargodha, Pakistan', lat: 32.08, lon: 72.67, type: 'farmland' },
+    { name: 'Farmland near Sargodha, Pakistan', lat: 32.20, lon: 72.90, type: 'farmland' },
+    { name: 'Farmland near Ludhiana, Indian Punjab', lat: 30.80, lon: 75.55, type: 'farmland' },
     { name: 'Lahore, Pakistan', lat: 31.55, lon: 74.34, type: 'city' },
     { name: 'Karachi, Pakistan', lat: 24.86, lon: 67.01, type: 'coast' },
     { name: 'Islamabad, Pakistan', lat: 33.69, lon: 73.05, type: 'city' },
     { name: 'Thar Desert, Pakistan/India', lat: 26.5, lon: 70.5, type: 'desert' },
     { name: 'Gilgit-Baltistan (Karakoram)', lat: 35.9, lon: 74.3, type: 'polar' },
-    { name: 'Ludhiana, Indian Punjab', lat: 30.9, lon: 75.85, type: 'farmland' },
+    { name: 'Ludhiana city, Indian Punjab', lat: 30.9, lon: 75.85, type: 'city' },
     { name: 'Delhi, India', lat: 28.61, lon: 77.21, type: 'city' },
     { name: 'Dhaka, Bangladesh', lat: 23.81, lon: 90.41, type: 'city' },
     { name: 'Svalbard (Arctic), Norway', lat: 78.22, lon: 15.65, type: 'polar' },
@@ -34,7 +36,7 @@
       place: 'Sargodha, Pakistan', lat: 32.08, lon: 72.67, variable: 'T2M_MIN', period: 'JJA', type: 'farmland',
       story: 'Warmer nights stop people, animals and crops from recovering from daytime heat. Compare night-time (minimum) with daytime (maximum) temperature trends.' },
     { emoji: '🌾', title: 'Greening of the Indus–Ganges Plains', q: 'Are irrigated farmlands getting greener from space?',
-      place: 'Ludhiana, Indian Punjab', lat: 30.9, lon: 75.85, variable: 'NDVI', period: 'annual', type: 'farmland',
+      place: 'Farmland near Ludhiana, Indian Punjab', lat: 30.80, lon: 75.55, variable: 'NDVI', period: 'annual', type: 'farmland',
       story: 'MODIS sees plant greenness every 16 days. Intensive irrigation and double cropping can raise NDVI — then check root-zone soil wetness for the hidden cost.' },
     { emoji: '🌧️', title: 'Has the Sahel Recovered?', q: 'Is rainy-season rainfall in Niamey trending?',
       place: 'Niamey (Sahel), Niger', lat: 13.51, lon: 2.11, variable: 'PRECTOTCORR', period: 'JJA', type: 'desert',
@@ -62,7 +64,7 @@
     <dt>NASA POWER — Prediction Of Worldwide Energy Resources</dt>
     <dd>Monthly data from 1981 to the latest complete year on a 0.5° × 0.625° grid. Meteorology and soil variables come from NASA GMAO’s <b>MERRA-2</b> reanalysis; solar and longwave radiation come from NASA’s <b>GEWEX SRB</b> and <b>CERES</b> projects. Accessed live through the POWER API (power.larc.nasa.gov).</dd>
     <dt>MODIS Terra MOD13Q1 v6.1 — Vegetation Indices</dt>
-    <dd>16-day, 250 m NDVI from the MODIS instrument on NASA’s Terra satellite (2000–present), accessed through the ORNL DAAC MODIS web service. We average the valid pixels in a ~3 km × 3 km window and then average the composites in each month. Pixels flagged as fill values are excluded.</dd>
+    <dd>16-day, 250 m NDVI from the MODIS instrument on NASA’s Terra satellite (2000–present), accessed through the ORNL DAAC MODIS web service. We average the valid pixels in a ~3 km × 3 km window and then average the composites in each month. Pixels flagged as fill values are excluded. The service returns 10 composites per request, so a new location can take a few minutes; the two farmland demo locations use a snapshot downloaded with this same code.</dd>
   </dl>
 
   <h3>How the statistics work (in plain language)</h3>

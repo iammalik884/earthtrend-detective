@@ -90,9 +90,25 @@
   }
 
   // MODIS NDVI (MOD13Q1) around a point: mean of valid 250 m pixels in a ~3x3 km window, aggregated to months.
-  async function modisNDVI(lat, lon, onProgress) {
+  // Pre-downloaded MODIS NDVI series for demo locations (fetched from the same ORNL DAAC service with this code).
+  // The ORNL web service returns at most 10 composites per request and can take several minutes for a full
+  // 25-year series, so Case Files use these snapshots for an instant demo. Any other location is fetched live.
+  let snapshotPromise = null;
+  async function ndviSnapshot(lat, lon) {
+    if (!snapshotPromise) snapshotPromise = fetch('data/ndvi_snapshots.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+    const snaps = await snapshotPromise;
+    const s = snaps[`${lat.toFixed(2)},${lon.toFixed(2)}`];
+    if (!s) return null;
+    const dates = [];
+    let [y, m] = s.start.split('-').map(Number);
+    for (let i = 0; i < s.values.length; i++) { dates.push(`${y}-${String(m).padStart(2, '0')}`); m++; if (m > 12) { m = 1; y++; } }
+    return { meta: { composites: s.composites, window: '3 km x 3 km mean of 250 m pixels', url: `${MODIS_BASE}/subset`, snapshot: s.downloaded }, series: { NDVI: { dates, values: s.values } } };
+  }
+
+  async function modisNDVI(lat, lon, onProgress, opts = {}) {
     const key = `ndvi|${lat.toFixed(3)}|${lon.toFixed(3)}`;
     if (cache.has(key)) return cache.get(key);
+    if (!opts.live) { const snap = await ndviSnapshot(lat, lon); if (snap) { cache.set(key, snap); return snap; } }
     const dj = await fetchJSON(`${MODIS_BASE}/dates?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}`);
     const dates = dj.dates;
     const chunks = [];
@@ -195,5 +211,5 @@
     return { dates, values };
   }
 
-  root.ETData = { powerPoint, powerRegional, modisNDVI, aggregate, anomalies, seasonsMatrix, clipYears, lastCompleteYear, FIRST_YEAR };
+  root.ETData = { ndviSnapshot, powerPoint, powerRegional, modisNDVI, aggregate, anomalies, seasonsMatrix, clipYears, lastCompleteYear, FIRST_YEAR };
 })(typeof window !== 'undefined' ? window : globalThis);
