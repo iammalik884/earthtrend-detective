@@ -29,14 +29,14 @@
   document.querySelectorAll('[data-goto]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); showTab(a.dataset.goto); }));
 
   // ---------- location ----------
-  // Basemap with automatic fallback (CARTO dark -> Esri dark gray) if tiles fail to load
+  // Basemap with automatic fallback (Esri dark gray -> OpenStreetMap) if tiles fail to load
   function addBasemap(m) {
-    let layer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap contributors &copy; CARTO', maxZoom: 12, subdomains: 'abcd' }).addTo(m);
+    const layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxZoom: 16 }).addTo(m);
     let errors = 0, switched = false;
     layer.on('tileerror', () => {
       if (switched || ++errors < 4) return;
       switched = true; m.removeLayer(layer);
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri, HERE, Garmin, &copy; OpenStreetMap contributors', maxZoom: 16 }).addTo(m);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors', maxZoom: 18 }).addTo(m);
     });
   }
   const map = L.map('map', { worldCopyJump: true }).setView([state.lat, state.lon], 4);
