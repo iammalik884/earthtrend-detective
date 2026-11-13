@@ -27,7 +27,7 @@ const server = http.createServer((req, res) => {
   page.on('console', m => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
   await page.route('**/*', async route => {
     const url = route.request().url();
-    if (url.includes('basemap.cartocdn.com')) return route.fulfill({ status: 200, contentType: 'image/png', body: Buffer.alloc(0) });
+    if (url.includes('cartocdn.com') || url.includes('arcgisonline') || url.includes('openstreetmap.org')) return route.fulfill({ status: 200, contentType: 'image/png', body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64') });
     if (url.includes('power.larc.nasa.gov') && url.includes('/point')) {
       const params = new URL(url).searchParams.get('parameters').split(',');
       const parameter = {}; params.forEach((p, i) => parameter[p] = monthlyObj(20 + i, 8, (i % 3 - 1) * 0.03, 3, 7 + i));
