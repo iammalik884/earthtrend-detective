@@ -68,7 +68,8 @@
     r.totalChange = r.slopePerYear * (r.span[1] - r.span[0]);
     const base = r.mode === 'monthly' ? null : S.mean(r.y);
     r.baseMean = base;
-    r.pctChange = base && Math.abs(base) > 1e-9 ? 100 * r.totalChange / Math.abs(base) : null;
+    // Percent change only makes sense for ratio-scale variables (not °C temperatures, which can be negative)
+    r.pctChange = (opts.ratioScale !== false) && base && base > 1e-9 ? 100 * r.totalChange / base : null;
     // agreement between parametric and non-parametric evidence
     const olsP = r.ols.pAdj;
     r.agree = (olsP < alpha) === (r.primaryP < alpha) && Math.sign(r.ols.slope) === Math.sign(r.slopePerYear);

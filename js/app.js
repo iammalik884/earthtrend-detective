@@ -49,7 +49,7 @@
     state.place = place || `${state.lat.toFixed(2)}°, ${state.lon.toFixed(2)}°`;
     $('lat').value = state.lat.toFixed(2); $('lon').value = state.lon.toFixed(2);
     marker.setLatLng([state.lat, state.lon]);
-    map.setView([state.lat, state.lon], zoom || Math.max(map.getZoom(), 4));
+    map.setView([state.lat, state.lon], zoom || Math.max(map.getZoom(), 4), { animate: false });
     const match = C.PLACES.findIndex(p => p.name === place);
     $('preset').value = match >= 0 ? String(match) : '';
   }
@@ -138,7 +138,7 @@
       const { series: full, meta } = await getSeries(state.varId, state.lat, state.lon, 'prog');
       const series = D.clipYears(full, state.startYear, state.endYear);
       setProgress('prog', 0.9);
-      const r = A.analyze(series, state.period);
+      const r = A.analyze(series, state.period, { ratioScale: v.units !== '°C' });
       state.last = { r, v, series, meta, place: state.place, period: state.period, lat: state.lat, lon: state.lon };
       renderResults();
       updateHash();
@@ -228,7 +228,7 @@
     rows.push(['Linear regression (OLS) t-test', `${fmt(r.ols.slope * 10)} ${v.units}/decade, t = ${fmt(r.ols.t)}, R² = ${fmt(r.ols.r2)}`, `${pText(r.ols.p)} · 95% CI ${fmt(r.ols.ciLow * 10)} to ${fmt(r.ols.ciHigh * 10)}`, 'Classic test; assumes independent, normally distributed residuals.']);
     rows.push(['OLS adjusted for autocorrelation', `lag-1 r = ${fmt(r.ols.lag1)}, effective n = ${fmt(r.ols.neff, 1)} of ${r.ols.n}`, `${pText(r.ols.pAdj)} · 95% CI ${fmt(r.ols.ciLowAdj * 10)} to ${fmt(r.ols.ciHighAdj * 10)}`, 'Santer et al. (2000) effective sample size.']);
     if (r.pettitt) rows.push(['Pettitt change point', `K = ${r.pettitt.K}, most likely after ${r.pettittYears[r.pettitt.index]}`, `${pText(r.pettitt.p)}`, 'Tests for a sudden step change.']);
-    if (r.mode === 'yearly' && r.yearsNeeded) rows.push(['Years needed for significance', isFinite(r.yearsNeeded) ? `≈ ${r.yearsNeeded} years` : '> 300 years', `have ${r.nYears}`, 'If current rate and noise persist (OLS-based estimate).']);
+    if (r.mode === 'yearly' && r.yearsNeeded && r.primaryP >= r.alpha && r.yearsNeeded > r.nYears) rows.push(['Years needed for significance', isFinite(r.yearsNeeded) ? `≈ ${r.yearsNeeded} years` : '> 300 years', `have ${r.nYears}`, 'If current rate and noise persist (OLS-based estimate).']);
     $('statsTable').innerHTML = '<tr><th>Test</th><th>Result</th><th>Significance</th><th>What it means</th></tr>' + rows.map(rw => `<tr>${rw.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
     $('dataNote').innerHTML = `Data: ${v.source}. Location ${state.last.lat.toFixed(2)}°, ${state.last.lon.toFixed(2)}°${meta && meta.elevation ? `, grid elevation ${Math.round(meta.elevation)} m` : ''}. ★ = test used for the verdict. Significance level α = 0.05.`;
   }
@@ -285,6 +285,8 @@
     const p = new URLSearchParams(location.hash.slice(1));
     if (!p.get('lat') || !p.get('lon')) return false;
     setLocation(parseFloat(p.get('lat')), parseFloat(p.get('lon')), p.get('place'), 6);
+    const known = C.PLACES.find(pl => pl.name === p.get('place'));
+    $('archetype').value = known ? known.type : ''; onArchetype();
     if (p.get('v') && byId[p.get('v')]) selectVariable(p.get('v'));
     if (p.get('p')) $('period').value = p.get('p');
     if (p.get('y0')) $('startYear').value = p.get('y0');
@@ -314,7 +316,7 @@
         const n = await D.modisNDVI(state.lat, state.lon, f => setProgress('scanProg', 0.3 + 0.6 * f));
         results.push({ v: byId.NDVI, series: D.clipYears(n.series.NDVI, 2001, END) });
       }
-      for (const it of results) it.r = A.analyze(it.series, period);
+      for (const it of results) it.r = A.analyze(it.series, period, { ratioScale: it.v.units !== '°C' });
       const ok = results.filter(it => !it.r.error);
       const q = S.benjaminiHochberg(ok.map(it => it.r.primaryP));
       ok.forEach((it, i) => { it.q = q[i]; });
@@ -367,7 +369,7 @@
       const reg = await D.powerRegional(id, latMin, latMax, lonMin, lonMax);
       setProgress('mapProg', 0.7); setStatus('mapStatus', `🧮 Running trend tests on ${reg.cells.length} grid cells…`);
       await new Promise(r => setTimeout(r, 20));
-      const cells = reg.cells.map(c => ({ ...c, r: A.analyze(D.clipYears(c, D.FIRST_YEAR, END), period) })).filter(c => !c.r.error);
+      const cells = reg.cells.map(c => ({ ...c, r: A.analyze(D.clipYears(c, D.FIRST_YEAR, END), period, { ratioScale: v.units !== '°C' }) })).filter(c => !c.r.error);
       const q = S.benjaminiHochberg(cells.map(c => c.r.primaryP)); cells.forEach((c, i) => c.q = q[i]);
       const decs = cells.map(c => c.r.slopePerYear * 10);
       const sorted = decs.map(Math.abs).sort((a, b) => a - b);
