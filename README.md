@@ -14,6 +14,19 @@ Built for the **2026 NASA Space Apps Challenge — “Be An Earth System Trend D
 
 ---
 
+## 🏅 Certificate
+
+**Galactic Problem Solver** — 2026 NASA Space Apps Challenge participant certificate awarded to **Usama Manzoor** (Team EarthTrend Copilot), November 14–15, 2026.
+
+![NASA Space Apps Challenge 2026 certificate](certificate/NASA_Space_Apps_2026_Certificate_Usama_Manzoor.jpg)
+
+[Download the certificate (PDF)](certificate/NASA_Space_Apps_2026_Certificate_Usama_Manzoor.pdf) · [Project page on spaceappschallenge.org](https://www.spaceappschallenge.org/2026/find-a-team/earthtrend-copilot/?tab=project)
+
+## 🎬 Demo
+
+- 30-second demo video: [demo/EarthTrend_Detective_30s.mp4](https://iammalik884.github.io/earthtrend-detective/demo/EarthTrend_Detective_30s.mp4)
+- 7-slide presentation: [demo/EarthTrend_Detective_slides.pdf](https://iammalik884.github.io/earthtrend-detective/demo/EarthTrend_Detective_slides.pdf)
+
 ## How it answers the challenge
 
 | Challenge objective | How EarthTrend Detective does it |
@@ -83,7 +96,7 @@ This project was developed with the help of an AI coding assistant (Anthropic's 
 
 ## Team
 
-**EarthTrend Copilot** — Usama Manzoor, MS Information Technology, University of Sargodha, Pakistan.
+**EarthTrend Copilot** — Usama Manzoor (team lead), MS Information Technology, University of Sargodha, Pakistan · Syeed Talha (Bangladesh).
 
 ## License
 
